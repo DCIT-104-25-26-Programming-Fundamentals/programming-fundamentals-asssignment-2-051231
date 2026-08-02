@@ -65,3 +65,138 @@
 #include <string>
 using namespace std;
 
+const int MAX = 10;
+
+void printMatrix(const int mat[MAX][MAX], int rows, int cols) {
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            cout << setw(5) << mat[i][j];
+        }
+        cout << endl;
+    }
+}
+
+void inputMatrix(int mat[MAX][MAX], int rows, int cols, string name) {
+    cout << "--- Input for Matrix " << name << " (" << rows << "x" << cols << ") ---" << endl;
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            cout << "Enter element [" << i << "][" << j << "]: ";
+            cin >> mat[i][j];
+        }
+    }
+}
+
+void transposeMatrix(const int input[MAX][MAX], int result[MAX][MAX], int rows, int cols) {
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            result[j][i] = input[i][j];
+        }
+    }
+}
+
+void addMatrices(const int A[MAX][MAX], const int B[MAX][MAX], int result[MAX][MAX], int rows, int cols) {
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            result[i][j] = A[i][j] + B[i][j];
+        }
+    }
+}
+
+void multiplyMatrices(const int A[MAX][MAX], const int B[MAX][MAX], int result[MAX][MAX], int rA, int cA, int cB) {
+    for (int i = 0; i < rA; i++) {
+        for (int j = 0; j < cB; j++) {
+            result[i][j] = 0;
+            for (int k = 0; k < cA; k++) {
+                result[i][j] += A[i][k] * B[k][j];
+            }
+        }
+    }
+}
+
+int main() {
+    int choice;
+    cout << "=== MATRIX OPERATIONS ===" << endl;
+    cout << "1. Transpose Matrix" << endl;
+    cout << "2. Add Matrices" << endl;
+    cout << "3. Multiply Matrices" << endl;
+    cout << "Enter choice (1-3): ";
+    cin >> choice;
+
+    if (choice == 1) {
+        int r, c;
+        cout << "Enter number of rows: ";
+        cin >> r;
+        cout << "Enter number of columns: ";
+        cin >> c;
+
+        int mat[MAX][MAX], transposed[MAX][MAX];
+        inputMatrix(mat, r, c, "A");
+
+        transposeMatrix(mat, transposed, r, c);
+
+        cout << endl << "Original Matrix:" << endl;
+        printMatrix(mat, r, c);
+
+        cout << endl << "Transposed Matrix:" << endl;
+        printMatrix(transposed, c, r);
+
+    } else if (choice == 2) {
+        int r, c;
+        cout << "Enter number of rows: ";
+        cin >> r;
+        cout << "Enter number of columns: ";
+        cin >> c;
+
+        int A[MAX][MAX], B[MAX][MAX], sum[MAX][MAX];
+        inputMatrix(A, r, c, "A");
+        inputMatrix(B, r, c, "B");
+
+        addMatrices(A, B, sum, r, c);
+
+        cout << endl << "Matrix A:" << endl;
+        printMatrix(A, r, c);
+
+        cout << endl << "Matrix B:" << endl;
+        printMatrix(B, r, c);
+
+        cout << endl << "Sum (A + B):" << endl;
+        printMatrix(sum, r, c);
+
+    } else if (choice == 3) {
+        int rA, cA, rB, cB;
+        cout << "Enter rows for Matrix A: ";
+        cin >> rA;
+        cout << "Enter columns for Matrix A: ";
+        cin >> cA;
+
+        cout << "Enter rows for Matrix B: ";
+        cin >> rB;
+        cout << "Enter columns for Matrix B: ";
+        cin >> cB;
+
+        if (cA != rB) {
+            cout << "Error: Matrix multiplication impossible. Columns of A must equal rows of B." << endl;
+            return 0;
+        }
+
+        int A[MAX][MAX], B[MAX][MAX], product[MAX][MAX];
+        inputMatrix(A, rA, cA, "A");
+        inputMatrix(B, rB, cB, "B");
+
+        multiplyMatrices(A, B, product, rA, cA, cB);
+
+        cout << endl << "Matrix A:" << endl;
+        printMatrix(A, rA, cA);
+
+        cout << endl << "Matrix B:" << endl;
+        printMatrix(B, rB, cB);
+
+        cout << endl << "Product (A x B):" << endl;
+        printMatrix(product, rA, cB);
+
+    } else {
+        cout << "Invalid choice!" << endl;
+    }
+
+    return 0;
+}
